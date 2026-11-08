@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#172554">
+  <title>激素大作戰｜人體內分泌闖關任務</title>
+  <style>
+    :root {
+      --navy: #172554; --blue: #2563eb; --gold: #fbbf24;
+      --green: #16a34a; --red: #dc2626; --ink: #172033;
+      --muted: #64748b; --bg: #f1f5f9; --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 24px 14px;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top left, #dbeafe, transparent 38%),
+                  linear-gradient(135deg, #eff6ff, #f8fafc 55%, #fef3c7);
+    }
+    .wrap { width: min(720px, 100%); margin: 0 auto; }
+    .hero {
+      color: white; padding: 28px 24px; border-radius: 24px;
+      background: linear-gradient(135deg, #172554, #1e40af);
+      box-shadow: 0 14px 32px #17255425; overflow: hidden; position: relative;
+    }
+    .hero:after { content: "🧬"; position: absolute; right: 20px; bottom: 8px; font-size: 86px; opacity: .16; }
+    .tag { display: inline-block; background: #1d4ed8; color: #dbeafe; padding: 6px 11px; border-radius: 99px; font-size: 12px; letter-spacing: 1px; }
+    h1 { margin: 14px 0 6px; font-size: clamp(28px, 6vw, 40px); }
+    .hero p { margin: 0; color: #dbeafe; line-height: 1.7; }
+    .panel {
+      margin-top: 18px; background: var(--card); border: 1px solid #e2e8f0;
+      border-radius: 22px; padding: 22px; box-shadow: 0 8px 24px #0f172a0c;
+    }
+    .stats { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px; font-weight: 700; }
+    .progress-track { height: 12px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f59e0b, #fbbf24); border-radius: inherit; transition: width .3s; }
+    .meta { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 13px; margin-top: 9px; }
+    .question-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .pill { border-radius: 99px; padding: 7px 12px; background: #dbeafe; color: #1d4ed8; font-size: 13px; font-weight: 800; }
+    .question { font-size: clamp(19px, 4vw, 23px); line-height: 1.55; margin: 10px 0 18px; }
+    .hint { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+    .options { display: grid; gap: 11px; }
+    .option {
+      width: 100%; text-align: left; display: flex; align-items: center; gap: 12px;
+      border: 2px solid #e2e8f0; border-radius: 15px; background: white;
+      padding: 13px 14px; font: inherit; font-size: 16px; color: var(--ink);
+      cursor: pointer; transition: .15s;
+    }
+    .option:hover:not(:disabled) { border-color: #93c5fd; background: #eff6ff; transform: translateY(-1px); }
+    .option:disabled { cursor: default; opacity: 1; }
+    .letter { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 10px; background: #f1f5f9; font-weight: 800; }
+    .option.correct { border-color: var(--green); background: #f0fdf4; }
+    .option.correct .letter { background: #dcfce7; color: #15803d; }
+    .option.incorrect { border-color: var(--red); background: #fef2f2; }
+    .feedback { margin-top: 16px; padding: 15px; border-radius: 15px; line-height: 1.6; }
+    .feedback.good { color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .feedback.bad { color: #991b1b; background: #fef2f2; border: 1px solid #fecaca; }
+    .feedback strong { display: block; font-size: 18px; margin-bottom: 4px; }
+    .btn {
+      border: 0; border-radius: 12px; padding: 12px 18px; font: inherit;
+      font-weight: 800; cursor: pointer; background: var(--blue); color: white;
+      margin-top: 12px; width: 100%; font-size: 16px;
+    }
+    .btn:hover { filter: brightness(1.06); }
+    .btn.secondary { background: #e2e8f0; color: #1e293b; }
+    .complete { text-align: center; }
+    .trophy { font-size: 76px; margin: 8px 0; }
+    .complete h2 { color: #15803d; font-size: 30px; margin: 5px 0; }
+    .joke-box { background: #fffbeb; border: 1px solid #fde68a; padding: 22px 16px; border-radius: 18px; margin: 20px 0 8px; }
+    .joke-q { font-size: 19px; font-weight: 800; line-height: 1.6; }
+    .joke-a { color: #b45309; font-size: 21px; font-weight: 900; line-height: 1.6; margin-top: 8px; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; padding: 18px 0 4px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 480px) {
+      body { padding: 14px 10px; }
+      .hero, .panel { padding: 19px 16px; border-radius: 18px; }
+      .hero:after { font-size: 64px; right: 12px; }
+      .option { font-size: 15px; padding: 11px; }
+      .meta { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <span class="tag">MISSION 01｜SCIENCE CHALLENGE</span>
+      <h1>激素大作戰！</h1>
+      <p>人體內分泌闖關任務<br>答對全部 20 題，解鎖神秘冷笑話！</p>
+    </header>
+
+    <section class="panel" aria-label="遊戲進度">
+      <div class="stats"><span>🏁 通關進度</span><span id="progressText">0 / 20</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="meta"><span id="correctText">答對：0 題</span><span id="wrongText">答錯：0 次</span></div>
+    </section>
+
+    <section class="panel" id="gamePanel">
+      <div class="question-top">
+        <span class="pill" id="questionNumber">第 1 / 20 題</span>
+        <span class="hint" style="margin:0">答對才能前進下一關</span>
+      </div>
+      <h2 class="question" id="questionText"></h2>
+      <div class="hint">請選擇正確答案：</div>
+      <div class="options" id="options"></div>
+      <div id="feedback" aria-live="polite"></div>
+    </section>
+
+    <section class="panel complete" id="completePanel" hidden>
+      <div class="trophy">🏆</div>
+      <h2>任務成功！</h2>
+      <p>恭喜你完成全部 20 題，全部答對！</p>
+      <div class="joke-box">
+        <div style="font-size:13px;color:#92400e;font-weight:800;letter-spacing:1px">🎉 通關冷笑話</div>
+        <div class="joke-q" id="jokeQuestion"></div>
+        <div class="joke-a" id="jokeAnswer"></div>
+      </div>
+      <button class="btn" id="anotherJoke">🤣 再抽一個笑話</button>
+      <button class="btn secondary" id="restart">🔄 再挑戰一次</button>
+    </section>
+
+    <div class="footer">國中自然科學｜內分泌系統知識挑戰</div>
+  </main>
+
+<script>
+const questions = [
+  { q:"內分泌腺分泌的化學物質稱為什麼？", o:["酵素","激素","養分","抗體"], a:1 },
+  { q:"激素主要透過哪一種方式運送到目標器官？", o:["神經傳導","消化道","血液運送","空氣傳播"], a:2 },
+  { q:"位於頸部前方、可以分泌甲狀腺素的腺體是？", o:["腦垂腺","甲狀腺","腎上腺","胰島"], a:1 },
+  { q:"哪一個內分泌腺分泌生長激素，影響身體生長？", o:["腦垂腺","甲狀腺","胰島","腎上腺"], a:0 },
+  { q:"當人遇到突發危險、心跳加快時，可能與哪一種激素有關？", o:["胰島素","甲狀腺素","腎上腺素","生長激素"], a:2 },
+  { q:"下列哪一個部位具有調節血糖的內分泌細胞？", o:["胃","胰島","肝臟","小腸"], a:1 },
+  { q:"吃完一頓豐盛的午餐後，血糖通常會如何變化？", o:["立即大幅下降","逐漸上升","完全不變","一定降到零"], a:1 },
+  { q:"飯後血糖升高時，身體會增加分泌哪一種激素？", o:["升糖素","生長激素","胰島素","腎上腺素"], a:2 },
+  { q:"胰島素最主要的作用是什麼？", o:["使血糖上升","使血糖下降","使心跳加快","促進身體感覺刺激"], a:1 },
+  { q:"長時間沒有進食，血糖逐漸降低時，身體會增加分泌哪一種激素？", o:["胰島素","升糖素","甲狀腺素","生長激素"], a:1 },
+  { q:"升糖素主要作用於哪個器官，幫助血糖上升？", o:["心臟","肺臟","肝臟","胃"], a:2 },
+  { q:"胰島素和升糖素的作用關係為何？", o:["兩者都使血糖上升","兩者都使血糖下降","兩者作用方向相反","兩者完全沒有關係"], a:2 },
+  { q:"小明吃完早餐後，血糖從 85 上升到 140，接著慢慢下降。最可能是哪一種激素幫助血糖下降？", o:["升糖素","胰島素","腎上腺素","生長激素"], a:1 },
+  { q:"小華早上沒有吃早餐，到了中午感到飢餓，此時哪一種激素有助於維持血糖？", o:["升糖素","胰島素","甲狀腺素","生長激素"], a:0 },
+  { q:"如果人體胰島素分泌不足，或身體對胰島素反應不佳，可能造成什麼結果？", o:["血糖長期偏高","血糖永遠為零","體溫一定下降","心跳停止"], a:0 },
+  { q:"甲狀腺素主要負責調節人體的哪一項功能？", o:["血液凝固","身體代謝速率","視覺形成","食物咀嚼"], a:1 },
+  { q:"如果兒童的生長激素分泌不足，可能出現什麼情況？", o:["身高生長受到影響","血糖一定過高","立刻變得很有力氣","視力一定變差"], a:0 },
+  { q:"下列哪一個情境最能說明內分泌系統的作用？", o:["手碰到熱鍋立刻縮手","吃飯後血糖上升，胰島素幫助調節","看到球飛來立刻眨眼","聽到聲音轉頭"], a:1 },
+  { q:"內分泌系統和神經系統相比，內分泌系統的作用通常有什麼特色？", o:["反應通常較慢，作用可能較持久","反應一定比神經系統快","只負責控制肌肉","不需要傳遞訊息"], a:0 },
+  { q:"為什麼人體需要胰島素與升糖素共同調節血糖？", o:["讓血糖一直升高","讓血糖一直降低","讓血糖維持在適當範圍","讓身體不需要進食"], a:2 }
+];
+
+const jokes = [
+  { q:"哪一種運動選手最粗心？", a:"游泳選手，因為他冒冒失失（帽帽濕濕）！" },
+  { q:"鴨子喉嚨痛會變成什麼？", a:"南瓜！因為牠難呱（南瓜）！" },
+  { q:"為什麼拍手手會痛？", a:"因為仙人掌有刺！" }
+];
+
+let current = 0;
+let completed = new Set();
+let wrongCount = 0;
+let jokeIndex = -1;
+
+const $ = id => document.getElementById(id);
+const letters = ["A", "B", "C", "D"];
+
+function updateProgress() {
+  const count = completed.size;
+  $("progressText").textContent = `${count} / ${questions.length}`;
+  $("progressFill").style.width = `${count / questions.length * 100}%`;
+  $("correctText").textContent = `答對：${count} 題`;
+  $("wrongText").textContent = `答錯：${wrongCount} 次`;
+}
+
+function renderQuestion() {
+  const item = questions[current];
+  $("questionNumber").textContent = `第 ${current + 1} / ${questions.length} 題`;
+  $("questionText").textContent = item.q;
+  $("feedback").innerHTML = "";
+  $("options").innerHTML = "";
+
+  item.o.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.className = "option";
+    button.type = "button";
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = letters[index];
+    const text = document.createElement("span");
+    text.textContent = option;
+    button.append(letter, text);
+    button.addEventListener("click", () => answer(index, button));
+    $("options").appendChild(button);
+  });
+}
+
+function answer(selected, selectedButton) {
+  const item = questions[current];
+  const buttons = [...$("options").querySelectorAll("button")];
+  buttons.forEach(button => button.disabled = true);
+
+  if (selected === item.a) {
+    completed.add(current);
+    selectedButton.classList.add("correct");
+    $("feedback").className = "feedback good";
+    $("feedback").innerHTML = `<strong>🎉 答對了！太棒了！</strong>這一題成功解鎖，繼續挑戰下一題！`;
+    updateProgress();
+
+    if (completed.size === questions.length) {
+      setTimeout(showCompletion, 650);
+    } else {
+      const nextButton = document.createElement("button");
+      nextButton.className = "btn";
+      nextButton.textContent = "下一題 →";
+      nextButton.addEventListener("click", goNext);
+      $("feedback").appendChild(nextButton);
+    }
+  } else {
+    wrongCount++;
+    selectedButton.classList.add("incorrect");
+    $("feedback").className = "feedback bad";
+    $("feedback").innerHTML = `<strong>❌ 答錯了，再試一次！</strong>這題還沒通過喔，想一想再挑戰！`;
+    updateProgress();
+
+    const retryButton = document.createElement("button");
+    retryButton.className = "btn";
+    retryButton.textContent = "重新作答";
+    retryButton.addEventListener("click", () => {
+      buttons.forEach(button => {
+        button.disabled = false;
+        button.classList.remove("incorrect", "correct");
+      });
+      $("feedback").innerHTML = "";
+      $("feedback").className = "";
+    });
+    $("feedback").appendChild(retryButton);
+  }
+}
+
+function goNext() {
+  let next = current + 1;
+  while (next < questions.length && completed.has(next)) next++;
+  current = next;
+  renderQuestion();
+}
+
+function showJoke() {
+  if (jokes.length === 1) jokeIndex = 0;
+  else {
+    let next;
+    do { next = Math.floor(Math.random() * jokes.length); }
+    while (next === jokeIndex);
+    jokeIndex = next;
+  }
+  $("jokeQuestion").textContent = jokes[jokeIndex].q;
+  $("jokeAnswer").textContent = jokes[jokeIndex].a;
+}
+
+function showCompletion() {
+  $("gamePanel").hidden = true;
+  $("completePanel").hidden = false;
+  showJoke();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+$("anotherJoke").addEventListener("click", showJoke);
+$("restart").addEventListener("click", () => {
+  current = 0;
+  completed = new Set();
+  wrongCount = 0;
+  jokeIndex = -1;
+  $("completePanel").hidden = true;
+  $("gamePanel").hidden = false;
+  updateProgress();
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+updateProgress();
+renderQuestion();
+</script>
+</body>
+</html>
